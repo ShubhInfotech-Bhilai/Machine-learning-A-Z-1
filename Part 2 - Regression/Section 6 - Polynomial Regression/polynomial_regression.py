@@ -19,3 +19,29 @@ X = dataset.iloc[:, 1:2].values
 # In this dataset our only dependant variable is the second column
 # which contains the salary
 Y = dataset.iloc[:, 2].values
+
+############## Fitting linear regression to dataset #################
+from sklearn.linear_model import LinearRegression
+regression_linear = LinearRegression()
+regression_linear.fit(X, Y)
+
+############## Fitting polynomial regression to dataset #################
+from sklearn.preprocessing import PolynomialFeatures
+polynomial_features = PolynomialFeatures(degree = 4)
+
+# This line will create a new vector containing the original value + a value
+# with the power of the original value
+X_polynomial = polynomial_features.fit_transform(X)
+
+# perform linear regression on the polynomial model
+regression_polynomial = LinearRegression()
+regression_polynomial.fit(X_polynomial, Y)
+
+############## Visualize the results #################
+plt.scatter(X, Y, color = 'red')
+plt.plot(X, regression_linear.predict(X), color = 'blue')
+plt.plot(X, regression_polynomial.predict(X_polynomial), color = 'green')
+plt.title('Salary vs position')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
