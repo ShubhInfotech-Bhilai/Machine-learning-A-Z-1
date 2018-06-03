@@ -44,3 +44,14 @@ from sklearn.cross_validation import train_test_split
 # be used by our model to train. When it's done, it will use the test set to
 # verify if it understands the correlations between the model
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+
+############## Apply multiple linear regression to training data #################
+# Import the linear regression model
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+
+# Apply the linear regession model on our train data set
+regressor.fit(X_train, Y_train)
+
+############## Predict the test set results #################
+Y_pred = regressor.predict(X_test)

@@ -33,7 +33,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 1/3, rando
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
 
-# Apply the linear regession model on our test data set
+# Apply the linear regession model on our train data set
 regressor.fit(X_train, Y_train)
 
 ############## Predict the test set results #################
