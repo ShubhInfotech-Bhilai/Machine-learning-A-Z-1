@@ -27,7 +27,7 @@ regression_linear.fit(X, Y)
 
 ############## Fitting polynomial regression to dataset #################
 from sklearn.preprocessing import PolynomialFeatures
-polynomial_features = PolynomialFeatures(degree = 4)
+polynomial_features = PolynomialFeatures(degree = 4) # higher = more power values
 
 # This line will create a new vector containing the original value + a value
 # with the power of the original value
