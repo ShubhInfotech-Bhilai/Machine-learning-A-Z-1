@@ -45,3 +45,9 @@ plt.title('Salary vs position')
 plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()
+
+############## Predict new result with linear regression #################
+regression_linear.predict(6.5)
+
+############## Predict new result with polynomial regression #################
+regression_polynomial.predict(polynomial_features.fit_transform(6.5))
