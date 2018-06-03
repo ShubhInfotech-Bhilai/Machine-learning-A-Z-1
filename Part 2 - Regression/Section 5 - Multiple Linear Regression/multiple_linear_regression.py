@@ -50,8 +50,50 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, rando
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
 
-# Apply the linear regession model on our train data set
+# Apply the linear regression model on our train data set
 regressor.fit(X_train, Y_train)
 
 ############## Predict the test set results #################
 Y_pred = regressor.predict(X_test)
+
+############## Apply backwards elimination #################
+# Add an extra column to the independent variables
+X = np.append(arr = np.ones((50, 1)).astype(int), values = X, axis = 1)
+
+# Eliminate statistically insignificant  independent variables
+X_opt = X[:, [0, 1, 2, 3, 4, 5]] # select all columns
+
+import statsmodels.formula.api as sm
+# OLS = Ordinary least squares model
+# First parameter is the array of the dependant variables
+regressor_OLS = sm.OLS(endog = Y, exog = X_opt).fit()
+
+# Print a summary of the P values, so we can see which values are statistically
+# relevant. P values are used to determine which columns are statistically relevant
+# and which one are not. The higher the P value is, the lower it's statistical relevance is
+regressor_OLS.summary()
+
+# Remove the variable with the highest P value
+X_opt = X[:, [0, 1, 3, 4, 5]] # Remove index 2 (state), which had the highest P value
+regressor_OLS = sm.OLS(endog = Y, exog = X_opt).fit()
+regressor_OLS.summary()
+
+X_opt = X[:, [0, 3, 4, 5]] # Remove index 1 (state), which had the highest P value
+regressor_OLS = sm.OLS(endog = Y, exog = X_opt).fit()
+regressor_OLS.summary()
+
+X_opt = X[:, [0, 3, 5]] # Remove index 4 (administration cost), which had the highest P value
+regressor_OLS = sm.OLS(endog = Y, exog = X_opt).fit()
+regressor_OLS.summary()
+
+X_opt = X[:, [0, 3]] # Remove index 5 (marketing cost) which had the highest P value
+regressor_OLS = sm.OLS(endog = Y, exog = X_opt).fit()
+regressor_OLS.summary()
+
+# Perform the linear regression on the new model
+X_train_opt, X_test_opt, Y_train_opt, Y_test_opt = train_test_split(X_opt, Y, test_size = 0.2, random_state = 0)
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train_opt, Y_train_opt)
+
+Y_pred_opt = regressor.predict(X_test_opt)
