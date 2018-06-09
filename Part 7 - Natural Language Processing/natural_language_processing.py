@@ -35,3 +35,5 @@ ps = PorterStemmer()
 # Loop through the words, stem them and remove any stopwords
 review = [ps.stem(word) for word in review if not word in set(stopwords.words('english'))]
 
+# Join the word back together
+review = ' '.join(review)
