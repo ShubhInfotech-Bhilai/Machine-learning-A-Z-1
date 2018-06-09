@@ -44,6 +44,12 @@ for i in range(0, 1000):
     cleaned_reviews.append(review)
     
 ############## Create the Bag of Words model #################
+# Create a count vectorizer that will create our independant X variable
+# It will create a dataset that will contain the 1500 most frequently used
+# words. 
 from sklearn.feature_extraction.text import CountVectorizer
-count_vectorizer = CountVectorizer()
+count_vectorizer = CountVectorizer(max_features = 1500)
 X = count_vectorizer.fit_transform(cleaned_reviews).toarray()
+
+# Create the dependant variable
+y = dataset.iloc[:, 1].values
