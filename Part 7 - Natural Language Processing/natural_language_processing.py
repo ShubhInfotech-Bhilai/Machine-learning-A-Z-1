@@ -48,8 +48,26 @@ for i in range(0, 1000):
 # It will create a dataset that will contain the 1500 most frequently used
 # words. 
 from sklearn.feature_extraction.text import CountVectorizer
-count_vectorizer = CountVectorizer(max_features = 1500)
+count_vectorizer = CountVectorizer(max_features = 1000)
 X = count_vectorizer.fit_transform(cleaned_reviews).toarray()
 
 # Create the dependant variable
-y = dataset.iloc[:, 1].values
+Y = dataset.iloc[:, 1].values
+
+############## Splitting the dataset into a training and a test set #################
+from sklearn.cross_validation import train_test_split
+
+# We are going to use X% of our dataset as a test set. The training set will
+# be used by our model to train. When it's done, it will use the test set to
+# verify if it understands the correlations between the model
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, random_state = 0)
+
+############## Train the model using the naive Bayes algorithm #################
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, Y_train)
+
+Y_pred = classifier.predict(X_test)
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(Y_test, Y_pred)
