@@ -42,3 +42,8 @@ for i in range(0, 1000):
     
     # Add the cleaned work to our array
     cleaned_reviews.append(review)
+    
+############## Create the Bag of Words model #################
+from sklearn.feature_extraction.text import CountVectorizer
+count_vectorizer = CountVectorizer()
+X = count_vectorizer.fit_transform(cleaned_reviews).toarray()
