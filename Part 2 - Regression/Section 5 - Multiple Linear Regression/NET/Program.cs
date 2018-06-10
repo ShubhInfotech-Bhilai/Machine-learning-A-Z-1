@@ -17,16 +17,16 @@ namespace PredictSprintVelocity {
             // Prompt the user for the sprint details
             while (true) {
                 Console.WriteLine("Enter new sprint details");
-                int sprintNumber = PromptDoubleValue("Sprint number: ");
-                int hoursMember1 = PromptDoubleValue("Hours member 1: ");
-                int hoursMember2 = PromptDoubleValue("Hours member 2: ");
+                int sprintNumber = PromptIntegerValue("Sprint number: ");
+                int hoursMember1 = PromptIntegerValue("Hours member 1: ");
+                int hoursMember2 = PromptIntegerValue("Hours member 2: ");
                 double predictedNumberOfStoryPoints = predictionModel.PredictNumberOfUserStories(sprintNumber, hoursMember1, hoursMember2);
                 Console.WriteLine($"I predict the team can process {predictedNumberOfStoryPoints} storypoints");
                 Console.WriteLine(String.Empty);
             }
         }
 
-        public static int PromptDoubleValue(string message) {
+        public static int PromptIntegerValue(string message) {
             Console.WriteLine(message);
             string userInput = Console.ReadLine();
             int outputValue;
@@ -34,7 +34,7 @@ namespace PredictSprintVelocity {
                 return outputValue;
             }
             Console.WriteLine("Please enter a valid number");
-            return PromptDoubleValue(message);
+            return PromptIntegerValue(message);
         }
     }
 }
