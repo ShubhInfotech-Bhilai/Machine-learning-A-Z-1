@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Accord.MachineLearning;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Fitting;
@@ -24,12 +23,11 @@ namespace LanguageProcessing {
 
         public bool PredictIsPositiveReview(string review) {
             review = this.CleanReview(review);
-            string[] reviewsToPredict = { review };
-            string[][] wordsPerReview = reviewsToPredict.Tokenize();
-            double[][] bagOfWordsResult = this._bagOfWordsModel.Transform(wordsPerReview);
-            int[] output = this._naiveBayesModel.Transform(bagOfWordsResult);
+            string[] reviewWords = review.Split(' ');
+            double[] bagOfWordsResult = this._bagOfWordsModel.Transform(reviewWords);
+            int output = this._naiveBayesModel.Transform(bagOfWordsResult);
 
-            return output[0] == 1;
+            return output == 1;
         }
 
         private string CleanReview(string review) {
