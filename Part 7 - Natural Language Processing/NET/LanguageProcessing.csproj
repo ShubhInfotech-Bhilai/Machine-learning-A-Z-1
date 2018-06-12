@@ -74,6 +74,9 @@
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="stopwords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <Content Include="Dataset\Restaurant_Reviews.tsv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
