@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Accord.MachineLearning;
 using Accord.MachineLearning.Bayes;
@@ -28,7 +29,7 @@ namespace LanguageProcessing {
             string[] inputs = trainingDataset.Select(x => x.Review).ToArray();
 
             // Our dependant variable is whether or not the review is positive
-            int[] outputs = trainingDataset.Select(x => x.IsPositive).ToArray();
+            int[] outputs = trainingDataset.Select(x => Convert.ToInt32(x.IsPositive)).ToArray();
 
             // Convert the reviews into a multidimensial array. Each review will contain the words of of the review
             // Also removes any punctation and other marks

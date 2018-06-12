@@ -17,10 +17,10 @@ namespace LanguageProcessing {
 
             RestaurantReviewClassifier restaurantReviewClassifier = new RestaurantReviewClassifier(trainingSet);
             foreach (RestaurantReview restaurantReview in testSet) {
-                restaurantReview.Result = restaurantReviewClassifier.PredictIsPositiveReview(restaurantReview.Review);
+                restaurantReview.Prediction = restaurantReviewClassifier.PredictIsPositiveReview(restaurantReview.Review);
             }
 
-            IEnumerable<RestaurantReview> incorrectPrediction = testSet.Where(x => x.Result != Convert.ToBoolean(x.IsPositive));
+            IEnumerable<RestaurantReview> incorrectPrediction = testSet.Where(x => x.Prediction != Convert.ToBoolean(x.IsPositive));
             Console.WriteLine($"Number of correct predictions: {testSet.Count() - incorrectPrediction.Count()}");
             Console.WriteLine($"Number of incorrect predictions: {incorrectPrediction.Count()}");
             Console.Read();
