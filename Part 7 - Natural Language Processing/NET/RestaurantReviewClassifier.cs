@@ -1,10 +1,13 @@
-﻿using System;
+﻿extern alias AccordText;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Accord.MachineLearning;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Fitting;
 using Accord.Statistics.Distributions.Univariate;
+using AccordText::Accord.MachineLearning.Text.Stemmers;
+
 
 namespace LanguageProcessing {
     public class RestaurantReviewClassifier {
@@ -27,9 +30,16 @@ namespace LanguageProcessing {
         private void Train(IEnumerable<RestaurantReview> trainingDataset) {
             // Our independant variable of the review text
             string[] inputs = trainingDataset.Select(x => x.Review).ToArray();
-
+            
             // Our dependant variable is whether or not the review is positive
             int[] outputs = trainingDataset.Select(x => Convert.ToInt32(x.IsPositive)).ToArray();
+
+            // Remove stopwords
+
+            // Apply stemming
+            EnglishStemmer stemmer = new EnglishStemmer();
+            inputs = inputs.Select(x => x.RemoveAllNonLetters().ToLower()).ToArray(); // Remove all non alphanumeric characters
+            inputs = inputs.Select(x => String.Join(" ", x.Split(' ').Select(word => stemmer.Stem(word)))).ToArray();
 
             // Convert the reviews into a multidimensial array. Each review will contain the words of of the review
             // Also removes any punctation and other marks
