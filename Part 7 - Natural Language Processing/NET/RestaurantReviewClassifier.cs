@@ -33,8 +33,13 @@ namespace LanguageProcessing {
         }
 
         private string CleanReview(string review) {
-            review = review.RemoveAllNonLetters();
+            // Remove any non alphanumeric characters and convert to lower
+            review = review.RemoveAllNonLetters().ToLower();
+
+            // Remove all english stopwords
             review = String.Join(" ", review.Split(' ').Where(word => !this._stopwords.Contains(word)));
+
+            // Stem every word
             review = String.Join(" ", review.Split(' ').Select(word => this._englishStemmer.Stem(word)));
 
             return review;
@@ -47,19 +52,12 @@ namespace LanguageProcessing {
             // Our dependant variable is whether or not the review is positive
             int[] outputs = trainingDataset.Select(x => Convert.ToInt32(x.IsPositive)).ToArray();
 
-            // Remove all non alphanumeric characters
-            inputs = inputs.Select(x => x.RemoveAllNonLetters().ToLower()).ToArray(); 
+            // Clean review text
+            inputs = inputs.Select(this.CleanReview).ToArray(); 
             
             // Convert the reviews into a multidimensial array. Each review will contain the words of of the review
             // Also removes any punctation and other marks
             string[][] wordsPerReview = inputs.Tokenize();
-
-            // Remove stopwords
-            string[] stopwords = File.ReadAllLines("stopwords.txt");
-            wordsPerReview = wordsPerReview.Select(review => review.Where(word => !stopwords.Contains(word)).ToArray()).ToArray();
-
-            // Apply stemming
-            wordsPerReview = wordsPerReview.Select(review => review.Select(word => this._englishStemmer.Stem(word)).ToArray()).ToArray();
 
             // Use the bag of words model to creates a sparse matrix that will say wether or not a review contains a certain word
             // All words will be added a column
