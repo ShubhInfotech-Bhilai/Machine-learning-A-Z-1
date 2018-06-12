@@ -7,10 +7,6 @@ using AccordText::Accord.MachineLearning.Text.Stemmers;
 namespace LanguageProcessing {
     class Program {
         static void Main(string[] args) {
-            string test = "nasty".RemoveAllNonLetters();
-            EnglishStemmer stemmer = new EnglishStemmer();
-            var result = stemmer.Stem(test);
-
             //StartManualReviewMode();
             PerformBulkTest();
         }
