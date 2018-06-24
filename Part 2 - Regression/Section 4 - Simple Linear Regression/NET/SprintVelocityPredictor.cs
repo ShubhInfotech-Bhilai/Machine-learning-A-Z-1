@@ -11,8 +11,8 @@ namespace SimpleLinearRegressionModel {
             this.Train(trainingDataset);
         }
 
-        public double PredictVelocity(double yearsOfExperience) {
-            return this._linearRegressionModel.Transform(yearsOfExperience);
+        public double PredictVelocity(double numberOfAvailableHours) {
+            return this._linearRegressionModel.Transform(numberOfAvailableHours);
         }
 
         private void Train(IEnumerable<SprintDataRow> trainingDataset) {
