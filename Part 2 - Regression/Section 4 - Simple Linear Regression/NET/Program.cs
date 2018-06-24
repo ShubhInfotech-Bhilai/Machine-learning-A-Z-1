@@ -5,20 +5,20 @@ namespace SimpleLinearRegressionModel {
     public class Program {
         static void Main(string[] args) {
             // Get the dataset
-            SalaryDataReader dataReader = new SalaryDataReader();
-            IEnumerable<SalaryDataRow> salaryDataset = dataReader.LoadRecords("Dataset/Salary_Data.csv");
+            SprintDataReader dataReader = new SprintDataReader();
+            IEnumerable<SprintDataRow> sprintDataset = dataReader.LoadRecords("Dataset/Sprint_Data.csv");
 
-            // Create the salary predictor
-            SalaryPredictionModel salaryPredictionModel = new SalaryPredictionModel(salaryDataset);
+            // Create the velocity predictor
+            SprintVelocityPredictor sprintVelocityPredictor = new SprintVelocityPredictor(sprintDataset);
 
-            // Prompt the user for the years of experience
+            // Prompt the user for the number of available hours
             while (true) {
-                Console.WriteLine("Enter the years of experience: ");
+                Console.WriteLine("Enter the number of hours: ");
                 string userInput = Console.ReadLine();
-                double yearsOfExperience;
-                if (double.TryParse(userInput, out yearsOfExperience)) {
-                    double predictedSalary = salaryPredictionModel.PredictSalary(yearsOfExperience);
-                    Console.WriteLine($"I predict the salary will be: {predictedSalary}");
+                double numberOfHours;
+                if (double.TryParse(userInput, out numberOfHours)) {
+                    double predictedNumberOfStorypoints = sprintVelocityPredictor.PredictVelocity(numberOfHours);
+                    Console.WriteLine($"I predict the number of completed story points will be: {predictedNumberOfStorypoints}");
                 }
                 else {
                     Console.WriteLine("Please enter a valid number");
