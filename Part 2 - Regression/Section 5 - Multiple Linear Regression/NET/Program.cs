@@ -1,32 +1,53 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PredictSprintVelocity {
     class Program {
         static void Main(string[] args) {
-            // Create the dataset
-            Sprint[] trainingDataset = new Sprint[] {
-                new Sprint() { Name = "Sprint 1", SprintNumber = 1, HoursMember1 = 60, HoursMember2 = 50, ProcessedStoryPoints = 80 },
-                new Sprint() { Name = "Sprint 2", SprintNumber = 2, HoursMember1 = 50, HoursMember2 = 20, ProcessedStoryPoints = 56 },
-                new Sprint() { Name = "Sprint 3", SprintNumber = 3, HoursMember1 = 55, HoursMember2 = 50, ProcessedStoryPoints = 94.5f },
-                new Sprint() { Name = "Sprint 4", SprintNumber = 1, HoursMember1 = 60, HoursMember2 = 60, ProcessedStoryPoints = 84 },
-                new Sprint() { Name = "Sprint 5", SprintNumber = 2, HoursMember1 = 50, HoursMember2 = 50, ProcessedStoryPoints = 80 }
-            };
+            //PerformManualTest();
+            PerformBulkTest();
+        }
 
-            SprintStorypointsPredictionModel predictionModel = new SprintStorypointsPredictionModel(trainingDataset);
+        public static void PerformBulkTest() {
+            SprintDataReader dataReader = new SprintDataReader();
+            IEnumerable<SprintDataRow> sprintDataset = dataReader.LoadRecords("Dataset/Sprint_Data.csv");
+            IEnumerable<SprintDataRow> trainingSet = sprintDataset.Take(200);
+            IEnumerable<SprintDataRow> testSet = sprintDataset.Skip(200);
 
-            // Prompt the user for the sprint details
+            SprintVelocityPredictor velocityPredictor = new SprintVelocityPredictor(trainingSet);
+            foreach (SprintDataRow sprintData in testSet) {
+                double predictedNumberOfStorypoints = velocityPredictor.PredictVelocity(sprintData);
+                Console.WriteLine($"For a sprint with the properties: Number: {sprintData.SprintNumber} - " +
+                                  $"Programmer1 {sprintData.HoursProgrammer1} - " +
+                                  $"Programmer2 {sprintData.HoursProgrammer2} - " +
+                                  $"Programmer3 {sprintData.HoursProgrammer3} " +
+                                  $"I predict {predictedNumberOfStorypoints} and " +
+                                  $"the actual number of processed storypoints was {sprintData.NumberOfProcessedStoryPoints}");
+            }
+
+            Console.Read();
+        }
+
+        public static void PerformManualTest() {
+            SprintDataReader dataReader = new SprintDataReader();
+            IEnumerable<SprintDataRow> sprintDataset = dataReader.LoadRecords("Dataset/Sprint_Data.csv");
+            SprintVelocityPredictor velocityPredictor = new SprintVelocityPredictor(sprintDataset);
+
             while (true) {
                 Console.WriteLine("Enter new sprint details");
                 int sprintNumber = PromptIntegerValue("Sprint number: ");
-                int hoursMember1 = PromptIntegerValue("Hours member 1: ");
-                int hoursMember2 = PromptIntegerValue("Hours member 2: ");
-                double predictedNumberOfStoryPoints = predictionModel.PredictNumberOfUserStories(sprintNumber, hoursMember1, hoursMember2);
+                int hoursMember1 = PromptIntegerValue("Hours programmer 1: ");
+                int hoursMember2 = PromptIntegerValue("Hours programmer 2: ");
+                int hoursMember3 = PromptIntegerValue("Hours programmer 3: ");
+                SprintDataRow sprintDataRow = new SprintDataRow(sprintNumber, hoursMember1, hoursMember2, hoursMember3);
+                double predictedNumberOfStoryPoints = velocityPredictor.PredictVelocity(sprintDataRow);
                 Console.WriteLine($"I predict the team can process {predictedNumberOfStoryPoints} storypoints");
                 Console.WriteLine(String.Empty);
             }
         }
 
-        public static int PromptIntegerValue(string message) {
+        private static int PromptIntegerValue(string message) {
             Console.WriteLine(message);
             string userInput = Console.ReadLine();
             int outputValue;
