@@ -7,8 +7,6 @@ using Accord.Statistics.Models.Regression;
 
 namespace LogisticRegressionExample {
 
-    using Accord.Statistics.Models.Regression.Fitting;
-
     public class SubstanceDangerAnalyzer {
         private NaiveBayes<NormalDistribution> _naiveBayesModel;
         private LogisticRegression _logisticRegression;
