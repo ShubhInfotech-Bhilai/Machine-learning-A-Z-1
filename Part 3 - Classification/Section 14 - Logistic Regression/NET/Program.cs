@@ -1,60 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace LogisticRegressionExample {
     public class Program {
         public static void Main(string[] args) {
-            //PerformManualTest();
             PerformBulkTest();
-        }
-
-        public static void PerformManualTest() {
-            SubstanceDataReader dataReader = new SubstanceDataReader();
-            IEnumerable<SubstanceData> sprintDataset = dataReader.LoadRecords("Dataset/Substances.csv");
-            //IEnumerable<SubstanceData> trainingSet = sprintDataset.Take(85000);
-
-            SubstanceDangerAnalyzer substanceDangerAnalyzer = new SubstanceDangerAnalyzer(sprintDataset);
-            while (true) {
-                Console.WriteLine("Enter substance details");
-                int type = PromptIntegerValue("Type: ");
-                int concentration = PromptIntegerValue("Concentration: ");
-                SubstanceData substance = new SubstanceData() {
-                    Type = type,
-                    Concentration = concentration
-                };
-
-                bool isDangerous = substanceDangerAnalyzer.PredictIsDangerous(substance);
-                string result = isDangerous ? "dangerous" : "not dangerous";
-                Console.WriteLine($"I predict this substance is {result}");
-            }
         }
 
         public static void PerformBulkTest() {
             SubstanceDataReader dataReader = new SubstanceDataReader();
             IEnumerable<SubstanceData> sprintDataset = dataReader.LoadRecords("Dataset/Substances.csv");
-            IEnumerable<SubstanceData> trainingSet = sprintDataset.Take(9750);
-            IEnumerable<SubstanceData> testSet = sprintDataset.Skip(9750);
+            IEnumerable<SubstanceData> trainingSet = sprintDataset.Take(9500);
+            IEnumerable<SubstanceData> testSet = sprintDataset.Skip(trainingSet.Count());
 
             SubstanceDangerAnalyzer velocityPredictor = new SubstanceDangerAnalyzer(trainingSet);
+            int numberOfMistakes = 0;
             foreach (SubstanceData substanceData in testSet) {
-                bool predictedIsDangerous = velocityPredictor.PredictIsDangerous(substanceData);
-                Console.WriteLine($"For a substance of type {substanceData.Type} and a concentration of {substanceData.Concentration} I think IsDangerious = {predictedIsDangerous}");
+                SubstanceDangerResult result = velocityPredictor.PredictIsDangerous(substanceData);
+                Console.WriteLine($"For a substance of type {substanceData.Type} and a concentration of {substanceData.Concentration} I think IsDangerious = {result.PredictedIsDangerous}");
+                Console.WriteLine($"The probability of this prediction is {result.PredictionProbability}%");
+
+                if (substanceData.IsDangerous != result.PredictedIsDangerous) {
+                    numberOfMistakes++;
+                }
             }
+
+            Console.WriteLine($"I predicted {testSet.Count()} substances.");
+            Console.WriteLine($"I was right {testSet.Count() - numberOfMistakes} times.");
+            Console.WriteLine($"I was wrong {numberOfMistakes} times.");
+            Console.WriteLine($"I was right {100 - ((float)numberOfMistakes / testSet.Count() * 100)}% of the time.");
 
             Console.Read();
-        }
-
-        private static int PromptIntegerValue(string message) {
-            Console.WriteLine(message);
-            string userInput = Console.ReadLine();
-            int outputValue;
-            if (int.TryParse(userInput, out outputValue)) {
-                return outputValue;
-            }
-            Console.WriteLine("Please enter a valid number");
-            return PromptIntegerValue(message);
         }
     }
 }
