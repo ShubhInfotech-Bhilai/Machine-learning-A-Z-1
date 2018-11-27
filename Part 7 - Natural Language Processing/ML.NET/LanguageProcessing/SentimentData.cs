@@ -2,9 +2,9 @@
 
 namespace LanguageProcessing {
     public class SentimentData {
-        [Column(ordinal: "0", name: "Label")]
+        [Column(ordinal: "1", name: "Label")]
         public float Sentiment;
-        [Column(ordinal: "1")]
+        [Column(ordinal: "0")]
         public string SentimentText;
     }
 
