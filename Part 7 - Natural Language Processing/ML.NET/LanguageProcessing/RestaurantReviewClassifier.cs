@@ -1,4 +1,5 @@
-﻿using Microsoft.ML;
+﻿using System;
+using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 
@@ -34,7 +35,21 @@ namespace LanguageProcessing {
             return pipeline.Fit(dataView);
         }
 
-        public SentimentPrediction Evaluate(SentimentData sentimentData) {
+        public void Evaluate(string testDataPath) {
+            IDataView dataView = this._textLoader.Read(testDataPath);
+            var predictions = this._model.Transform(dataView);
+            var metrics = this._mlContext.BinaryClassification.Evaluate(predictions, "Label");
+
+            Console.WriteLine();
+            Console.WriteLine("Model quality metrics evaluation");
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
+            Console.WriteLine($"Auc: {metrics.Auc:P2}");
+            Console.WriteLine($"F1Score: {metrics.F1Score:P2}");
+            Console.WriteLine("=============== End of model evaluation ===============");
+        }
+
+        public SentimentPrediction Predict(SentimentData sentimentData) {
             var predictionFunction = this._model.MakePredictionFunction<SentimentData, SentimentPrediction>(this._mlContext);
             return predictionFunction.Predict(sentimentData);
         }

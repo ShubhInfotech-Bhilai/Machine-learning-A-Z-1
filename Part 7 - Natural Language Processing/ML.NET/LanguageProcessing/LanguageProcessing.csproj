@@ -17,10 +17,10 @@
     <None Update="Data\Restaurant_Reviews.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\wikipedia-detox-250-line-data.tsv">
+    <None Update="Data\Restaurant_Reviews_test.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\wikipedia-detox-250-line-test.tsv">
+    <None Update="Data\Restaurant_Reviews_training.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
