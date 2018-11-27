@@ -2,6 +2,7 @@
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Transforms.Text;
 
 
 namespace LanguageProcessing {
@@ -29,10 +30,18 @@ namespace LanguageProcessing {
 
         private ITransformer Train() {
             IDataView dataView = this._textLoader.Read(this._trainingDataPath);
-            var pipeline = this._mlContext.Transforms.Text.FeaturizeText(nameof(SentimentData.SentimentText), "Features")
+
+            var pipeline = this._mlContext.Transforms.Text.FeaturizeText(nameof(SentimentData.SentimentText), "Features", x => {
+                    x.KeepPunctuations = false;
+                    x.KeepNumbers = false;
+                    x.TextCase = TextNormalizingEstimator.CaseNormalizationMode.Lower;
+                    x.KeepDiacritics = false;
+                    x.TextLanguage = TextFeaturizingEstimator.Language.English;
+                })
                 .Append(this._mlContext.BinaryClassification.Trainers.FastTree(numLeaves: 50, numTrees: 50, minDatapointsInLeafs: 20));
 
-            return pipeline.Fit(dataView);
+            var model = pipeline.Fit(dataView);
+            return model;
         }
 
         public void Evaluate(string testDataPath) {
